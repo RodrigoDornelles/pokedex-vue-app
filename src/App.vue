@@ -1,28 +1,61 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <img alt="VueDex" src="./assets/vuedex.png">
+    
+    <section id="Types">
+      <Type v-for="(name, key) in this.types.data" :name="name" :key="key"/>
+    </section>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Type from "./components/Type.vue";
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Type
+  },
+  data: () => ({
+    types: {
+      data: [],
+      count: 0
+    },
+    pokemons: {
+      data: [],
+      count: 0,
+      total: 0
+    }
+  }),
+  mounted() {
+    this.fetchTypes();
+    this.fetchPokemon();
+  },
+  methods: {
+    fetchTypes() {
+      this.axios.get('types').then((response) => {
+        this.types = response.data;
+      })
+    },
+    fetchPokemons() {
+      this.axios.get().then((response) => {
+        console.log(response.data)
+      })
+    }
   }
 }
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+}
+
+#Types {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 </style>
