@@ -1,5 +1,5 @@
 <template>
-    <button class="Type" :class="[name, checked?'Active':'']" @click="check(name)">
+    <button class="Type waves-effect" :class="[name, checked?'Active':'']" @click="check(name)">
         {{ name }}
     </button>
 </template>

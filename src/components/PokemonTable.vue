@@ -23,16 +23,19 @@
             </tr>
         </tbody>
     </table>
+    <Pagination :min="1" :max="pokemons.pagination.pageCount" :actual="pokemons.pagination.page + 1"/>
   </div>
 </template>
 
 <script>
 import Type from "./Type.vue";
+import Pagination from "./Pagination.vue";
 
 export default {
   name: 'PokemonTable',
   components: {
     Type,
+    Pagination
   },
   props: {
     pokemons: Object

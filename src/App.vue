@@ -32,6 +32,7 @@ export default {
     PokemonTable,
   },
   data: () => ({
+    page: 0,
     filter: {
       types: []
     },
@@ -48,6 +49,11 @@ export default {
   mounted() {
     this.fetchTypes();
     this.fetchPokemons();
+
+    bus.$on('gopage', (number) => {
+      this.page = number;
+      this.fetchPokemons();
+    });
     bus.$on('checktype', (name) => {
       if (this.filter.types.includes(name)) {
         this.filter.types.splice(this.filter.types.indexOf(name), 1);
@@ -70,6 +76,7 @@ export default {
     fetchPokemons() {
       this.axios.get('list', {
         params: {
+          'page': this.page,
           'PokemonSearch[type_1]': this.filter.types[0] ?? null,
           'PokemonSearch[type_2]': this.filter.types[1] ?? null
         }
