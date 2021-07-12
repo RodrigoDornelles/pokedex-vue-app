@@ -22,8 +22,9 @@ export default {
   },
   methods: {
       pages() {
-        return Array.from({length: Math.min(7, this.max - this.min)}, (_, i) => 
-          Math.max(this.actual - 3, this.min) + i + Math.min(0, (this.max - 3) - this.actual)
+        let length = Math.min(7, this.max - this.min)
+        return Array.from({length}, (_, i) => 
+          Math.max(this.actual - Math.trunc(length/2), this.min) + i + Math.min(0, (this.max - Math.trunc(length/2)) - this.actual)
         );
       },
       change(number) {

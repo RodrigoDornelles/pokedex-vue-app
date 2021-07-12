@@ -2,14 +2,11 @@
   <div id="app">
     <h1><img alt="VueDex" src="./assets/vuedex.png"></h1>
     <section>
-      <h3>Pokemon Listed: <span>{{ pokemons.count }} / {{ pokemons.total }}</span></h3>
+      <h5>Pokemon Listed: <span>{{ pokemons.count }} / {{ pokemons.total }}</span></h5>
+      <Search :filter="filter"/>
     </section>
-    <section id="Types">
-      <Type 
-        v-for="(name, key) in types.data"
-        :checked="checkedtype(name)"
-        :name="name" :key="key"
-      />
+    <section>
+      <ListTypes :types="types" :filter="filter"/>
     </section>
     <section>
       <PokemonTable :pokemons="pokemons" :sort="sort"/>
@@ -22,20 +19,25 @@
 
 <script>
 import bus from './bus.js';
-import Type from "./components/Type.vue";
+import Search from "./components/Search.vue";
+import ListTypes from "./components/ListTypes.vue";
 import PokemonTable from "./components/PokemonTable.vue";
 
 export default {
   name: 'App',
   components: {
-    Type,
+    Search,
+    ListTypes,
     PokemonTable,
   },
   data: () => ({
     sort: null,
     page: 0,
     filter: {
-      types: []
+      types: [],
+      mega: null,
+      search: null,
+      legendary: null,
     },
     types: {
       data: [],
@@ -63,6 +65,18 @@ export default {
       this.page = number;
       this.fetchPokemons();
     });
+    bus.$on('search', (input) => {
+      this.filter.search = input;
+      this.fetchPokemons();
+    });
+    bus.$on('checkmega', (check) => {
+      this.filter.mega = check? 1: null;
+      this.fetchPokemons();
+    });
+    bus.$on('checklegendary', (check) => {
+      this.filter.legendary = check? 1: null;
+      this.fetchPokemons();
+    });
     bus.$on('checktype', (name) => {
       if (this.filter.types.includes(name)) {
         this.filter.types.splice(this.filter.types.indexOf(name), 1);
@@ -87,16 +101,16 @@ export default {
         params: {
           'sort': this.sort,
           'page': this.page,
+          'PokemonSearch[mega]': this.filter.mega,
+          'PokemonSearch[name]': this.filter.search,
           'PokemonSearch[type_1]': this.filter.types[0] ?? null,
-          'PokemonSearch[type_2]': this.filter.types[1] ?? null
+          'PokemonSearch[type_2]': this.filter.types[1] ?? null,
+          'PokemonSearch[legendary]': this.filter.legendary,
         }
       }).then((response) => {
         this.pokemons = response.data;
       })
     },
-    checkedtype(name) {
-      return this.filter.types.includes(name);
-    }
   }
 }
 </script>
@@ -109,18 +123,8 @@ export default {
   text-align: center;
 }
 
-#Types {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
 section {
   max-width: 640px;
-  margin: 32px auto;
-}
-
-h2 span {
-  display: inline-block;
+  margin: 8px auto;
 }
 </style>

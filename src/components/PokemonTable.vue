@@ -49,12 +49,15 @@ export default {
     Pagination
   },
   props: {
-    sort: String,
+    sort: {
+      type: String,
+      default: 'number'
+    },
     pokemons: Object
   },
   methods: {
     check(name) {
-      if (name == this.sort || !this.sort) {
+      if (name == this.sort) {
         bus.$emit('sort', `-${name}`);
         return;
       }
@@ -71,10 +74,10 @@ export default {
         return '#';
       }
       else if (this.sort == name) {
-        return '<i class="tiny material-icons">arrow_drop_down</i>'; 
+        return '<i class="tiny material-icons">arrow_drop_up</i>'; 
       }
       else if (this.sort == `-${name}`) {
-        return '<i class="tiny material-icons">arrow_drop_up</i>'; 
+        return '<i class="tiny material-icons">arrow_drop_down</i>'; 
       }
       return '';
     }
@@ -90,6 +93,6 @@ export default {
 
 thead tr th:hover {
     opacity: 0.74;
-    mouse: pointer;
+    cursor: pointer;
 }
 </style>
