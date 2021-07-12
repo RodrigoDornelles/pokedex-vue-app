@@ -32,7 +32,7 @@ export default {
 
 .Type:hover {
     opacity: 0.74;
-    mouse: pointer;
+    cursor: pointer;
 }
 
 .Active {
