@@ -2,7 +2,7 @@
   <div id="app">
     <h1><img alt="VueDex" src="./assets/vuedex.png"></h1>
     <section>
-      <h2>Pokemon Listed: <span>{{ pokemons.count }} / {{ pokemons.total }}</span></h2>
+      <h3>Pokemon Listed: <span>{{ pokemons.count }} / {{ pokemons.total }}</span></h3>
     </section>
     <section id="Types">
       <Type 
@@ -12,7 +12,7 @@
       />
     </section>
     <section>
-      <PokemonTable :pokemons="pokemons"/>
+      <PokemonTable :pokemons="pokemons" :sort="sort"/>
     </section>
     <section>
 
@@ -32,6 +32,7 @@ export default {
     PokemonTable,
   },
   data: () => ({
+    sort: null,
     page: 0,
     filter: {
       types: []
@@ -43,13 +44,21 @@ export default {
     pokemons: {
       data: [],
       count: 0,
-      total: 0
+      total: 0,
+      pagination: {
+        page: 0,
+        pageCount: 0,
+      }
     }
   }),
   mounted() {
     this.fetchTypes();
     this.fetchPokemons();
 
+    bus.$on('sort', (number) => {
+      this.sort = number;
+      this.fetchPokemons();
+    });
     bus.$on('gopage', (number) => {
       this.page = number;
       this.fetchPokemons();
@@ -76,6 +85,7 @@ export default {
     fetchPokemons() {
       this.axios.get('list', {
         params: {
+          'sort': this.sort,
           'page': this.page,
           'PokemonSearch[type_1]': this.filter.types[0] ?? null,
           'PokemonSearch[type_2]': this.filter.types[1] ?? null

@@ -3,11 +3,21 @@
       <table class="highlight">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Generation</th>
-                <th>Legendary</th>
-                <th>Type</th>
+                <th @click="check('number')">
+                  <span v-html="sorted('#')"/>
+                </th>
+                <th @click="check('name')">
+                  Name<span v-html="sorted('name')"/>
+                </th>
+                <th @click="check('generation')">
+                  Generation<span v-html="sorted('generation')"/>
+                </th>
+                <th @click="check('legendary')">
+                  Legendary<span v-html="sorted('legendary')"/>
+                </th>
+                <th @click="check('type')">
+                  Type<span v-html="sorted('type')"/>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -28,6 +38,7 @@
 </template>
 
 <script>
+import bus from '../bus.js';
 import Type from "./Type.vue";
 import Pagination from "./Pagination.vue";
 
@@ -38,7 +49,35 @@ export default {
     Pagination
   },
   props: {
+    sort: String,
     pokemons: Object
+  },
+  methods: {
+    check(name) {
+      if (name == this.sort || !this.sort) {
+        bus.$emit('sort', `-${name}`);
+        return;
+      }
+      bus.$emit('sort', name);
+    },
+    sorted(name) {
+      if (name == '#' && (!this.sort || this.sort == 'number')) {
+        return '<i class="tiny material-icons">arrow_drop_up</i>'; 
+      }
+      else if (name == '#' && this.sort == '-number') {
+        return '<i class="tiny material-icons">arrow_drop_down</i>'; 
+      }
+      else if (name == '#') {
+        return '#';
+      }
+      else if (this.sort == name) {
+        return '<i class="tiny material-icons">arrow_drop_down</i>'; 
+      }
+      else if (this.sort == `-${name}`) {
+        return '<i class="tiny material-icons">arrow_drop_up</i>'; 
+      }
+      return '';
+    }
   }
 }
 </script>
@@ -49,4 +88,8 @@ export default {
   padding: 16px;
 }
 
+thead tr th:hover {
+    opacity: 0.74;
+    mouse: pointer;
+}
 </style>
