@@ -1,22 +1,29 @@
 <template>
-  <div id="app">
+  <main id="app">
     <h1><img alt="VueDex" src="./assets/vuedex.png"></h1>
-    <section>
-      <h5>Pokemon Listed: <span>{{ pokemons.count }} / {{ pokemons.total }}</span></h5>
-      <Search :filter="filter"/>
-    </section>
-    <section>
-      <ListTypes :types="types" :filter="filter"/>
-    </section>
-    <section>
-      <PokemonTable :pokemons="pokemons" :sort="sort" :view="view"/>
-    </section>
-  </div>
+    <div v-if="pokemons.total">
+      <section>
+        <h5>Pokemon Listed: <span>{{ pokemons.count }} / {{ pokemons.total }}</span></h5>
+        <Search :filter="filter"/>
+      </section>
+      <section>
+        <ListTypes :types="types" :filter="filter"/>
+      </section>
+      <section>
+        <PokemonTable :pokemons="pokemons" :sort="sort" :view="view" v-if="pokemons.count"/>
+        <span class="not-found" v-else>No pokemons were found!<br/>
+          <small>in current search terms.</small>
+        </span>
+      </section>
+    </div>
+    <Loading v-else />
+  </main>
 </template>
 
 <script>
 import bus from './bus.js';
 import Search from "./components/Search.vue";
+import Loading from "./components/Loading.vue";
 import ListTypes from "./components/ListTypes.vue";
 import PokemonTable from "./components/PokemonTable.vue";
 
@@ -24,6 +31,7 @@ export default {
   name: 'App',
   components: {
     Search,
+    Loading,
     ListTypes,
     PokemonTable,
   },
@@ -146,5 +154,10 @@ export default {
 section {
   max-width: 640px;
   margin: 8px auto;
+}
+
+.not-found {
+  padding-top: 32px;
+  font-size: 24px;
 }
 </style>
