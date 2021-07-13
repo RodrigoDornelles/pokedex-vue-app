@@ -1,6 +1,6 @@
 <template>
   <div class="yellow lighten-4 table">
-      <table class="highlight">
+      <table>
         <thead>
             <tr>
                 <th @click="check('number')">
@@ -21,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr v-for="pokemon in this.pokemons.data" :key="pokemon.id">
+            <tr v-for="pokemon in this.pokemons.data" :key="pokemon.id" @click="click(pokemon.id)">
               <th>{{ pokemon.number }}</th>
               <th>{{ pokemon.name }}</th>
               <th>{{ pokemon.generation }}</th>
@@ -34,6 +34,7 @@
         </tbody>
     </table>
     <Pagination :min="1" :max="pokemons.pagination.pageCount" :actual="pokemons.pagination.page + 1"/>
+    <PokemonInfo :pokemon="view"/>
   </div>
 </template>
 
@@ -41,21 +42,27 @@
 import bus from '../bus.js';
 import Type from "./Type.vue";
 import Pagination from "./Pagination.vue";
+import PokemonInfo from "./PokemonInfo.vue";
 
 export default {
   name: 'PokemonTable',
   components: {
     Type,
-    Pagination
+    Pagination,
+    PokemonInfo
   },
   props: {
     sort: {
       type: String,
       default: 'number'
     },
+    view: Object,
     pokemons: Object
   },
   methods: {
+    click(id) {
+      bus.$emit('info', id);
+    },
     check(name) {
       if (name == this.sort) {
         bus.$emit('sort', `-${name}`);
@@ -94,5 +101,10 @@ export default {
 thead tr th:hover {
     opacity: 0.74;
     cursor: pointer;
+}
+
+tbody tr:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, .5);
 }
 </style>

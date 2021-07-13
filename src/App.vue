@@ -9,10 +9,7 @@
       <ListTypes :types="types" :filter="filter"/>
     </section>
     <section>
-      <PokemonTable :pokemons="pokemons" :sort="sort"/>
-    </section>
-    <section>
-
+      <PokemonTable :pokemons="pokemons" :sort="sort" :view="view"/>
     </section>
   </div>
 </template>
@@ -33,6 +30,22 @@ export default {
   data: () => ({
     sort: null,
     page: 0,
+    view: {
+      id: 0,
+      number: 0,
+      name: "MissingNo.",
+      type_1: "Bug",
+      type_2: "Error",
+      total: 0,
+      hp: 0,
+      attack: 0,
+      defense: 0,
+      special_attack: 0,
+      special_defence: 0,
+      speed: 0,
+      generation: 0,
+      legendary: true,
+    },
     filter: {
       types: [],
       mega: null,
@@ -57,6 +70,13 @@ export default {
     this.fetchTypes();
     this.fetchPokemons();
 
+    bus.$on('info', (id) => {
+      this.axios.get(`info/id/${id}`).then((response) => {
+        this.view = response.data.data;
+      }).then(() => {
+        bus.$emit('modal');
+      });
+    });
     bus.$on('sort', (number) => {
       this.sort = number;
       this.fetchPokemons();
