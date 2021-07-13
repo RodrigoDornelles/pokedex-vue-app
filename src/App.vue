@@ -10,7 +10,10 @@
         <ListTypes :types="types" :filter="filter"/>
       </section>
       <section>
-        <PokemonTable :pokemons="pokemons" :sort="sort" :view="view"/>
+        <PokemonTable :pokemons="pokemons" :sort="sort" :view="view" v-if="pokemons.count"/>
+        <span class="not-found" v-else>No pokemons were found!<br/>
+          <small>in current search terms.</small>
+        </span>
       </section>
     </div>
     <Loading v-else />
@@ -151,5 +154,10 @@ export default {
 section {
   max-width: 640px;
   margin: 8px auto;
+}
+
+.not-found {
+  padding-top: 32px;
+  font-size: 24px;
 }
 </style>
