@@ -10,7 +10,7 @@
                   Name<span v-html="sorted('name')"/>
                 </th>
                 <th @click="check('generation')">
-                  Generation<span v-html="sorted('generation')"/>
+                  Gen<span class="hide-on-med-and-down">eration</span><span v-html="sorted('generation')"/>
                 </th>
                 <th @click="check('legendary')">
                   Legendary<span v-html="sorted('legendary')"/>
